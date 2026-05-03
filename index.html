@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Gestión Empresarial · MPL Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0d1b2a; --navy-mid:#1a2e45; --navy-light:#243b55;
+      --gold:#c9a84c; --gold-light:#e8c97a; --gold-pale:#f5e6b8;
+      --white:#f8f7f4; --gray:#8a9ab0; --gray-light:#d4dae4;
+      --text:#1a2535; --surface:#ffffff; --surface2:#f2f4f8;
+      --border:#dde2eb;
+      --shadow:0 4px 24px rgba(13,27,42,0.10);
+      --shadow-hover:0 8px 40px rgba(13,27,42,0.16);
+      --radius:12px; --radius-sm:8px;
+    }
+    html { scroll-behavior:smooth }
+    body { font-family:'DM Sans',sans-serif; background:var(--white); color:var(--text); min-height:100vh }
+
+    /* HEADER */
+    header { background:var(--navy); padding:0 2rem; position:sticky; top:0; z-index:100; border-bottom:1px solid var(--navy-light) }
+    .header-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px }
+    .logo { display:flex; align-items:center; gap:12px }
+    .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:8px; display:flex; align-items:center; justify-content:center }
+    .logo-icon svg { width:18px; height:18px }
+    .logo-text { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:600; color:var(--white) }
+    .logo-sub { font-size:0.68rem; color:var(--gold); letter-spacing:0.08em; text-transform:uppercase; display:block; font-weight:400 }
+    nav { display:flex; gap:4px }
+    nav a { color:var(--gray); text-decoration:none; font-size:0.875rem; padding:6px 14px; border-radius:6px; transition:all 0.2s }
+    nav a:hover { color:var(--white); background:var(--navy-light) }
+
+    /* HERO */
+    .hero { background:var(--navy); padding:80px 2rem 96px; position:relative; overflow:hidden }
+    .hero::before { content:''; position:absolute; top:-60px; right:-60px; width:420px; height:420px; background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%); border-radius:50% }
+    .hero::after { content:''; position:absolute; bottom:-80px; left:20%; width:300px; height:300px; background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%); border-radius:50% }
+    .hero-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1 }
+    .hero-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-size:0.72rem; font-weight:500; padding:5px 14px; border-radius:100px; margin-bottom:24px; letter-spacing:0.04em; text-transform:uppercase }
+    .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:700; color:var(--white); line-height:1.2; margin-bottom:20px; max-width:640px }
+    .hero h1 span { color:var(--gold) }
+    .hero p { color:var(--gray); font-size:1.05rem; line-height:1.75; max-width:520px; margin-bottom:36px; font-weight:300 }
+    .hero-stats { display:flex; gap:40px; flex-wrap:wrap }
+    .stat { display:flex; flex-direction:column; gap:4px }
+    .stat-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--gold); line-height:1 }
+    .stat-label { font-size:0.78rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.06em }
+
+    /* DIVIDER */
+    .divider { height:4px; background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,transparent 100%) }
+
+    /* SECTION */
+    section { padding:72px 2rem }
+    .section-inner { max-width:1200px; margin:0 auto }
+    .section-header { margin-bottom:48px }
+    .section-label { font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:10px }
+    .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,2rem); font-weight:600; color:var(--navy); line-height:1.25 }
+    .section-desc { margin-top:12px; color:var(--gray); font-size:0.95rem; font-weight:300; line-height:1.7; max-width:520px }
+
+    /* TOOL CARDS */
+    .tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:24px }
+    .tool-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px; cursor:pointer; transition:all 0.25s; position:relative; overflow:hidden; text-decoration:none; display:block; color:inherit }
+    .tool-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gold); opacity:0; transition:opacity 0.25s }
+    .tool-card:hover { border-color:var(--gold); box-shadow:var(--shadow-hover); transform:translateY(-3px) }
+    .tool-card:hover::before { opacity:1 }
+    .tool-card.featured { border-color:var(--gold) }
+    .tool-card.featured::before { opacity:1 }
+    .tool-card-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:18px; font-size:22px }
+    .icon-blue { background:#e8f0fb } .icon-green { background:#e6f4ea }
+    .icon-amber { background:#fdf3e0 } .icon-purple { background:#f0eafa }
+    .icon-teal { background:#e0f4f0 } .icon-red { background:#fce8e8 }
+    .tool-card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:600; margin-bottom:8px; color:var(--navy) }
+    .tool-card p { font-size:0.875rem; color:var(--gray); line-height:1.65; font-weight:300 }
+    .tool-card-footer { margin-top:20px; display:flex; align-items:center; justify-content:space-between }
+    .tag { font-size:0.7rem; font-weight:500; padding:3px 10px; border-radius:100px; letter-spacing:0.04em; text-transform:uppercase }
+    .tag-app { background:#e8f0fb; color:#1a4a8a }
+    .tag-calc { background:#fdf3e0; color:#8a5a00 }
+    .tag-excel { background:#e6f4ea; color:#1a6b30 }
+    .tag-online { background:#e6f4ea; color:#1a6b30 }
+    .arrow-icon { width:28px; height:28px; background:var(--surface2); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:13px }
+    .tool-card:hover .arrow-icon { background:var(--gold-pale); transform:translateX(3px) }
+    .online-dot { width:8px; height:8px; background:#34a853; border-radius:50%; display:inline-block; margin-right:5px }
+    .placeholder-card { border-style:dashed; opacity:0.45; pointer-events:none }
+
+    /* HERRAMIENTAS INTERNAS */
+    .tool-embed-frame { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow) }
+    .tool-tabs { display:flex; border-bottom:1px solid var(--border); background:var(--surface2); padding:0 16px; gap:4px; overflow-x:auto }
+    .tool-tab { padding:14px 18px; font-size:0.875rem; font-weight:500; color:var(--gray); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; white-space:nowrap; user-select:none; font-family:'DM Sans',sans-serif; border-top:none; border-left:none; border-right:none; background:none }
+    .tool-tab.active { color:var(--navy); border-bottom-color:var(--gold) }
+    .tool-tab:hover:not(.active) { color:var(--navy) }
+    .tool-content { display:none; padding:32px }
+    .tool-content.active { display:block }
+
+    /* CALC */
+    .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px }
+    @media(max-width:640px){.calc-grid{grid-template-columns:1fr}}
+    .calc-panel h4 { font-weight:600; font-size:0.875rem; color:var(--navy); margin-bottom:16px; text-transform:uppercase; letter-spacing:0.05em }
+    .field { margin-bottom:14px }
+    .field label { display:block; font-size:0.8rem; color:var(--gray); margin-bottom:5px; font-weight:500 }
+    .field input, .field select { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--text); background:var(--surface); outline:none; transition:border-color 0.2s }
+    .field input:focus, .field select:focus { border-color:var(--gold) }
+    .calc-btn { width:100%; padding:11px; background:var(--navy); color:var(--white); border:none; border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; margin-top:8px; transition:background 0.2s }
+    .calc-btn:hover { background:var(--navy-light) }
+    .result-panel { background:var(--navy); border-radius:var(--radius); padding:24px; color:var(--white) }
+    .result-panel h4 { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--gold); margin-bottom:20px; font-weight:500 }
+    .result-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.07); font-size:0.875rem }
+    .result-row:last-child { border-bottom:none }
+    .result-label { color:rgba(255,255,255,0.55) }
+    .result-value { font-weight:600 }
+    .result-total { margin-top:16px; padding-top:16px; border-top:1px solid rgba(201,168,76,0.3); display:flex; justify-content:space-between; align-items:center }
+    .result-total-label { font-size:0.8rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.05em }
+    .result-total-value { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold-light) }
+
+    /* EXCEL TABLE */
+    .excel-table-wrapper { overflow-x:auto; border-radius:var(--radius-sm); border:1px solid var(--border) }
+    .excel-table { width:100%; border-collapse:collapse; font-size:0.85rem }
+    .excel-table thead { background:var(--navy) }
+    .excel-table thead th { padding:11px 16px; text-align:left; color:var(--gold-light); font-weight:500; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap }
+    .excel-table tbody tr:nth-child(even) { background:var(--surface2) }
+    .excel-table tbody tr:hover { background:#f0f4ff }
+    .excel-table tbody td { padding:10px 16px; border-bottom:1px solid var(--border); color:var(--text) }
+    .excel-table tfoot td { padding:11px 16px; font-weight:700; background:#f5f3ed; border-top:2px solid var(--gold); color:var(--navy) }
+    .badge-status { display:inline-block; padding:2px 10px; border-radius:100px; font-size:0.72rem; font-weight:600 }
+    .badge-pagado { background:#e6f4ea; color:#1a6b30 }
+    .badge-pendiente { background:#fdf3e0; color:#8a5a00 }
+    .badge-vencido { background:#fce8e8; color:#8a1a1a }
+
+    /* ABOUT */
+    #acerca { background:var(--navy) }
+    #acerca .section-title { color:var(--white) }
+    #acerca .section-desc { color:var(--gray) }
+    #acerca .section-label { color:var(--gold) }
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center }
+    @media(max-width:768px){.about-grid{grid-template-columns:1fr}}
+    .contact-card { background:var(--navy-light); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:32px }
+    .contact-card h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--white); margin-bottom:20px }
+    .contact-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.9rem }
+    .contact-item:last-child { border-bottom:none }
+    .contact-text { color:var(--gray) }
+    .contact-link { color:var(--gold-light); text-decoration:none }
+    .contact-link:hover { text-decoration:underline }
+    .about-features { display:flex; flex-direction:column; gap:20px }
+    .about-feat { display:flex; gap:16px; align-items:flex-start }
+    .about-feat-icon { width:40px; height:40px; background:rgba(201,168,76,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:18px }
+    .about-feat-text h4 { color:var(--white); font-size:0.95rem; font-weight:600; margin-bottom:4px }
+    .about-feat-text p { color:var(--gray); font-size:0.82rem; line-height:1.6; font-weight:300 }
+
+    /* FOOTER */
+    footer { background:#080f17; padding:28px 2rem; text-align:center; border-top:1px solid rgba(201,168,76,0.15) }
+    .footer-inner { max-width:1200px; margin:0 auto }
+    .footer-logo { font-family:'Playfair Display',serif; font-size:1rem; color:var(--gold); margin-bottom:8px }
+    .footer-copy { font-size:0.78rem; color:var(--gray) }
+
+
+    /* TEMAS */
+    .temas-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px }
+    .tema-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; transition:all 0.25s; position:relative; overflow:hidden }
+    .tema-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); opacity:0; transition:opacity 0.25s }
+    .tema-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-3px) }
+    .tema-card:hover::after { opacity:1 }
+    .tema-icon { font-size:2.2rem; margin-bottom:18px; display:block }
+    .tema-card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:600; color:var(--navy); margin-bottom:12px }
+    .tema-card p { font-size:0.875rem; color:var(--gray); line-height:1.75; font-weight:300; margin-bottom:20px }
+    .tema-tags { display:flex; flex-wrap:wrap; gap:6px }
+    .tema-tags span { font-size:0.7rem; font-weight:600; padding:3px 10px; border-radius:100px; background:var(--gold-pale); color:var(--navy-mid); letter-spacing:0.03em }
+
+    @media(max-width:600px){ nav{display:none} .hero-stats{gap:24px} }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="6" height="6" rx="1.5" fill="#0d1b2a"/>
+          <rect x="10" y="2" width="6" height="6" rx="1.5" fill="#0d1b2a"/>
+          <rect x="2" y="10" width="6" height="6" rx="1.5" fill="#0d1b2a"/>
+          <rect x="10" y="10" width="6" height="6" rx="1.5" fill="#0d1b2a"/>
+        </svg>
+      </div>
+      <div>
+        <span class="logo-text">MPL Solutions</span>
+        <span class="logo-sub">Portal de Gestión Empresarial</span>
+      </div>
+    </div>
+    <nav>
+      <a href="#apps">Herramientas</a>
+      <a href="#temas">Disciplinas</a>
+      <a href="#acerca">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">✦ Portal de gestión profesional</div>
+    <h1>Todas tus herramientas <span>en un solo lugar</span></h1>
+    <p>Accede a aplicaciones, calculadoras y planillas diseñadas para optimizar la gestión de tu empresa. Sin pagos, sin mantención.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">2</span><span class="stat-label">Herramientas</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Gratuito</span></div>
+      <div class="stat"><span class="stat-num">0</span><span class="stat-label">Mantención requerida</span></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- APPS PUBLICADAS EN GITHUB PAGES -->
+<section id="apps">
+  <div class="section-inner">
+    <div class="section-header">
+      <p class="section-label">Aplicaciones en línea</p>
+      <h2 class="section-title">Herramientas publicadas en GitHub</h2>
+      <p class="section-desc">Apps completas alojadas en GitHub Pages. Haz clic para abrirlas directamente en una nueva pestaña.</p>
+    </div>
+    <div class="tools-grid">
+
+      <!-- Optimizador de Corte -->
+      <a class="tool-card featured" href="https://mplsolutions.github.io/optimizador-corte/" target="_blank" rel="noopener">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div class="tool-card-icon icon-amber" style="margin-bottom:0">✂️</div>
+          <span class="tag tag-online"><span class="online-dot"></span>En línea</span>
+        </div>
+        <h3>Optimizador de Corte 1D</h3>
+        <p>Minimiza el desperdicio de material en cortes lineales usando programación lineal entera (ILP) con solver Python/PuLP directamente en el navegador.</p>
+        <div class="tool-card-footer">
+          <span style="font-size:0.72rem;color:var(--gray)">mplsolutions.github.io</span>
+          <div class="arrow-icon">↗</div>
+        </div>
+      </a>
+
+      <!-- Evaluador de Proyectos -->
+      <a class="tool-card featured" href="https://mplsolutions.github.io/evaluador-proyectos/" target="_blank" rel="noopener">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div class="tool-card-icon icon-purple" style="margin-bottom:0">📊</div>
+          <span class="tag tag-online"><span class="online-dot"></span>En línea</span>
+        </div>
+        <h3>Evaluador de Proyectos de Inversión</h3>
+        <p>Calcula VAN, TIR, Payback, EBITDA y análisis de sensibilidad. Incluye financiamiento con préstamo, depreciaciones por activo y capital de trabajo.</p>
+        <div class="tool-card-footer">
+          <span style="font-size:0.72rem;color:var(--gray)">mplsolutions.github.io</span>
+          <div class="arrow-icon">↗</div>
+        </div>
+      </a>
+
+      <!-- Placeholder -->
+      <div class="tool-card placeholder-card">
+        <div class="tool-card-icon icon-blue" style="margin-bottom:16px">➕</div>
+        <h3 style="color:var(--gray)">Próxima herramienta</h3>
+        <p>Aquí aparecerá tu siguiente app publicada en GitHub Pages.</p>
+        <div class="tool-card-footer"><span class="tag tag-app">Próximamente</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TEMAS DE APOYO -->
+<section id="temas" style="background:var(--surface2)">
+  <div class="section-inner">
+    <div class="section-header">
+      <p class="section-label">Marco disciplinar</p>
+      <h2 class="section-title">Áreas de conocimiento aplicado</h2>
+      <p class="section-desc">Las herramientas de este portal se construyen sobre disciplinas consolidadas de la ingeniería y gestión empresarial.</p>
+    </div>
+    <div class="temas-grid">
+
+      <div class="tema-card">
+        <div class="tema-icon">⚙️</div>
+        <h3>Optimización</h3>
+        <p>Técnicas matemáticas para encontrar la mejor solución posible dentro de un conjunto de restricciones. Aplicada en corte de materiales, asignación de recursos y planificación de producción.</p>
+        <div class="tema-tags">
+          <span>Programación lineal</span><span>ILP</span><span>Minimización de merma</span>
+        </div>
+      </div>
+
+      <div class="tema-card">
+        <div class="tema-icon">🏭</div>
+        <h3>Gestión de Operaciones</h3>
+        <p>Administración eficiente de los procesos productivos de una empresa. Abarca planificación de la producción, gestión de inventarios, logística y control de calidad.</p>
+        <div class="tema-tags">
+          <span>Producción</span><span>Inventarios</span><span>Logística</span>
+        </div>
+      </div>
+
+      <div class="tema-card">
+        <div class="tema-icon">🔬</div>
+        <h3>Investigación Operativa</h3>
+        <p>Aplicación de métodos analíticos avanzados para apoyar la toma de decisiones. Combina estadística, optimización y modelación matemática para resolver problemas complejos de negocio.</p>
+        <div class="tema-tags">
+          <span>Modelos matemáticos</span><span>Decisiones</span><span>Análisis cuantitativo</span>
+        </div>
+      </div>
+
+      <div class="tema-card">
+        <div class="tema-icon">🎲</div>
+        <h3>Simulación</h3>
+        <p>Modelación computacional de sistemas reales para predecir comportamientos bajo distintos escenarios. Permite experimentar con variables sin riesgo operacional ni costo real.</p>
+        <div class="tema-tags">
+          <span>Montecarlo</span><span>Escenarios</span><span>Análisis de riesgo</span>
+        </div>
+      </div>
+
+      <div class="tema-card">
+        <div class="tema-icon">📐</div>
+        <h3>Ingeniería Financiera</h3>
+        <p>Evaluación cuantitativa de proyectos e inversiones mediante indicadores como VAN, TIR y análisis de sensibilidad. Integra el valor tiempo del dinero y la estructura de financiamiento.</p>
+        <div class="tema-tags">
+          <span>VAN / TIR</span><span>WACC</span><span>Sensibilidad</span>
+        </div>
+      </div>
+
+      <div class="tema-card">
+        <div class="tema-icon">📊</div>
+        <h3>Analítica de Datos</h3>
+        <p>Transformación de datos operacionales en información accionable. Desde planillas de control hasta dashboards que permiten visualizar tendencias y tomar mejores decisiones.</p>
+        <div class="tema-tags">
+          <span>Visualización</span><span>KPIs</span><span>Reportería</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ACERCA -->
+<section id="acerca">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div>
+        <p class="section-label">El portal</p>
+        <h2 class="section-title">Diseñado para gestionar mejor</h2>
+        <p class="section-desc" style="margin-top:16px">Este portal centraliza todas las herramientas de gestión empresarial creadas con inteligencia artificial, disponibles sin costo y sin mantención técnica requerida.</p>
+        <div class="about-features" style="margin-top:36px">
+          <div class="about-feat">
+            <div class="about-feat-icon">🆓</div>
+            <div class="about-feat-text"><h4>Completamente gratuito</h4><p>Publicado en GitHub Pages. Sin servidores, sin suscripciones, sin pagos.</p></div>
+          </div>
+          <div class="about-feat">
+            <div class="about-feat-icon">🔒</div>
+            <div class="about-feat-text"><h4>Privado y seguro</h4><p>Todos los cálculos ocurren en tu navegador. Ningún dato sale de tu equipo.</p></div>
+          </div>
+          <div class="about-feat">
+            <div class="about-feat-icon">⚡</div>
+            <div class="about-feat-text"><h4>Sin mantención</h4><p>Funciona sin base de datos ni actualizaciones de servidor requeridas.</p></div>
+          </div>
+          <div class="about-feat">
+            <div class="about-feat-icon">🌱</div>
+            <div class="about-feat-text"><h4>En constante crecimiento</h4><p>Se agregan nuevas herramientas a medida que se desarrollan con Claude AI.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <h3>Información del portal</h3>
+        <div class="contact-item"><span>🌐</span><span class="contact-text">Publicado en <a class="contact-link" href="#">GitHub Pages</a></span></div>
+        <div class="contact-item"><span>🏢</span><span class="contact-text">MPL Solutions</span></div>
+        <div class="contact-item"><span>📅</span><span class="contact-text">Actualizado: 2025</span></div>
+        <div class="contact-item"><span>🤖</span><span class="contact-text">Desarrollado con Claude AI · Anthropic</span></div>
+        <div class="contact-item"><span>📧</span><span class="contact-text"><a class="contact-link" href="mailto:tu@email.com">tu@email.com</a></span></div>
+        <div style="margin-top:24px;padding:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px">
+          <p style="font-size:0.8rem;color:var(--gray);line-height:1.65">¿Necesitas agregar más herramientas? Pueden desarrollarse nuevas apps y calculadoras para este portal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">MPL Solutions · Portal de Gestión Empresarial</div>
+    <p class="footer-copy">Herramientas gratuitas para la gestión de tu empresa · Desarrollado con Claude AI · 2025</p>
+  </div>
+</footer>
+
+</body>
+</html>
